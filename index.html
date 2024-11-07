@@ -1,179 +1,51 @@
-<!-- <!doctype html>
-<html>
-    <head>
-        <title>Reel Time</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Ultra&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="index.css">
-    </head>
-    <body>
-        <div class="container">
-            <h1>Reel Time</h1>
-            <div class="field">
-                <input type="text" id="input-field" placeholder="Pulp Fiction">
-                <button id="add-button">+</button>
-            </div>
-        </div>
-        <script src="./index.js" type="module"></script>
-    </body>
-</html> -->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text to Binary Background</title>
-    <style>
-        body {
-            transition: background-color 0.5s ease, opacity 0.5s ease;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            transition: opacity 0.5s ease;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            transition: opacity 0.5s ease;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
-            margin-top: 10px;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .fullscreen-button {
-            background-color: #008CBA;
-        }
-
-        button.fullscreen-button:hover {
-            background-color: #007bb5;
-        }
-
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-time Firebase Data</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Enter Text</h1>
-        <input type="text" id="input-field" placeholder="Enter text (e.g., jeet)">
-        <button id="add-button" onclick="changeBackground()">Submit</button>
-        <button class="fullscreen-button" onclick="toggleFullscreen()">Toggle Fullscreen</button>
-        <div class="error" id="errorMessage"></div>
-    </div>
-    <script src="./index.js" type="module"></script>
-    <script>
-        function textToBinary(text) {
-            return text.split('').map(char => {
-                let binary = char.charCodeAt(0).toString(2);
-                return binary.padStart(8, '0');
-            }).join('');
-        }
-    
-        function changeBackground() {
-    const input = document.getElementById('input-field');
-    const errorMessage = document.getElementById('errorMessage');
-    const container = document.querySelector('.container');
-    const body = document.body;
+  <h1>Real-time Movie List</h1>
+  
+  <!-- Div to display the movie list -->
+  <div id="movie-list"></div>
+  
+  <!-- Import the Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
-    if (input.value === "") {
-        errorMessage.textContent = 'Please enter some text.';
-        return;
-    }
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBDhubzhTCdbGBcP2spjMZUFrIiOW0vC1A",
+      authDomain: "i-am-crying-at-this-point.firebaseapp.com",
+      databaseURL: "https://i-am-crying-at-this-point-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "i-am-crying-at-this-point",
+      storageBucket: "i-am-crying-at-this-point.appspot.com",
+      messagingSenderId: "28362192160",
+      appId: "1:28362192160:web:1819bbc3f9c99283ca5345",
+      measurementId: "G-W5GJ8EZZT7"
+    };
 
-    errorMessage.textContent = '';
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const moviesRef = ref(database, 'movies');
 
-    // Make everything disappear
-    container.style.opacity = "0";
-    body.style.opacity = "0";
+    const movieListEl = document.getElementById("movie-list");
 
-    // Adding the starting bit sequence (e.g., 8 bits of '1')
-    const startSequence = '00000000'; 
-    const binaryString = startSequence + textToBinary(input.value);
-
-    let index = 0;
-
-    // Interval to change background color according to each bit (delays after each bit)
-    const interval = setInterval(() => {
-        if (index < binaryString.length) {
-            body.style.backgroundColor = binaryString[index] === '1' ? 'black' : 'white';
-            index++;
-        } else {
-            clearInterval(interval);
-            
-            // Adding an additional delay after the entire string of bits
-            setTimeout(() => {
-                // Make everything visible again after the background transition
-                container.style.opacity = "1";
-                body.style.opacity = "1";
-            }, 1000); // Adjust this delay as needed to match the time after the full string
-        }
-    }, 100);  // Delay applied after each bit (100ms to simulate Arduino's PERIOD)
-}
-
-    
-        function toggleFullscreen() {
-            const elem = document.documentElement;
-    
-            if (!document.fullscreenElement) {
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.mozRequestFullScreen) { // Firefox
-                    elem.mozRequestFullScreen();
-                } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) { // IE/Edge
-                    elem.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
-        }
-    </script>
-    
+    // Listen for changes in the database and update the list
+    onValue(moviesRef, (snapshot) => {
+      const data = snapshot.val();
+      movieListEl.innerHTML = ''; // Clear existing list
+      for (const key in data) {
+        const movie = data[key];
+        const movieItem = document.createElement("p");
+        movieItem.textContent = movie;
+        movieListEl.appendChild(movieItem);
+      }
+    });
+  </script>
 </body>
 </html>
