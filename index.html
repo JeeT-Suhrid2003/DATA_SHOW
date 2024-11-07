@@ -4,12 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Real-time Firebase Data</title>
+  <style>
+    /* Reset some default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Basic styling */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      color: #333;
+    }
+
+    /* Container styling */
+    .container {
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Header styling */
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    /* Movie list styling */
+    #movie-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Movie item styling */
+    .movie-item {
+      padding: 10px;
+      background-color: #e9f4ff;
+      border-left: 4px solid #007bff;
+      border-radius: 4px;
+      font-size: 18px;
+      color: #444;
+    }
+  </style>
 </head>
 <body>
-  <h1>Real-time Movie List</h1>
-  
-  <!-- Div to display the movie list -->
-  <div id="movie-list"></div>
+  <div class="container">
+    <h1>Real-time Movie List</h1>
+    <div id="movie-list"></div>
+  </div>
   
   <!-- Import the Firebase SDK -->
   <script type="module">
@@ -41,7 +95,8 @@
       movieListEl.innerHTML = ''; // Clear existing list
       for (const key in data) {
         const movie = data[key];
-        const movieItem = document.createElement("p");
+        const movieItem = document.createElement("div");
+        movieItem.className = "movie-item";
         movieItem.textContent = movie;
         movieListEl.appendChild(movieItem);
       }
