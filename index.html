@@ -89,17 +89,21 @@
 
     const movieListEl = document.getElementById("movie-list");
 
-    // Listen for changes in the database and update the list
+    // Listen for changes in the database and update the list with a 5-second delay
     onValue(moviesRef, (snapshot) => {
       const data = snapshot.val();
-      movieListEl.innerHTML = ''; // Clear existing list
-      for (const key in data) {
-        const movie = data[key];
-        const movieItem = document.createElement("div");
-        movieItem.className = "movie-item";
-        movieItem.textContent = movie;
-        movieListEl.appendChild(movieItem);
-      }
+      
+      // Use setTimeout to add a 5-second delay before updating the list
+      setTimeout(() => {
+        movieListEl.innerHTML = ''; // Clear existing list
+        for (const key in data) {
+          const movie = data[key];
+          const movieItem = document.createElement("div");
+          movieItem.className = "movie-item";
+          movieItem.textContent = movie;
+          movieListEl.appendChild(movieItem);
+        }
+      }, 5000); // 5-second delay (5000 milliseconds)
     });
   </script>
 </body>
